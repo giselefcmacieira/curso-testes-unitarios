@@ -35,7 +35,6 @@ describe("Order Service Tests", () => {
         }
       })
     const order = await getOrderByProtocol('123456789') //Não encontra a order com esse protocolo
-    console.log(order)
     expect(order).toEqual(expect.objectContaining({
       protocol: '123456789',
       status: "IN_PREPARATION"
@@ -44,7 +43,16 @@ describe("Order Service Tests", () => {
   });
 
   it("should return status INVALID when protocol doesn't exists", async () => {
-    // TODO
-    expect(true).toBe(true);
+    jest
+      .spyOn(orderRepository, 'getByProtocol')
+      .mockImplementation((): any => {
+        return undefined
+      })
+    const order = await getOrderByProtocol('123456789') //Não encontra a order com esse protocolo
+    expect(order).toEqual(expect.objectContaining({
+      protocol: '123456789',
+      status: "INVALID"
+    })
+    )
   });
 });
